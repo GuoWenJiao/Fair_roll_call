@@ -7,7 +7,8 @@ import pandas as pd
 
 # 中文字体
 text_font = 'SimSun'
-win = visual.Window([1920,1080],fullscr=True,color='#D0D0D0',units='pix')
+winsize = [1920,1080]
+win = visual.Window(winsize,fullscr=True,color='#D0D0D0',units='pix')
 def drawimage(image1,location = [-290,-12.5]):
     pic = visual.ImageStim(win, image= image1, pos=location)
     pic.draw(win)
@@ -30,16 +31,20 @@ text_list = []
 # text_list = ['\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n']
 locationx = 0
 t1 = time.clock()
-chengxianhangshu = 11
+chengxianhangshu = 11 # 屏幕呈现多少行字
+height = 50 # 字有多大
+# 先填充n行空白文字
 for i in range(chengxianhangshu):
     text_list.append('\n')
 move_juli = 5 #每次移动的距离
-duration = 10 # 倒计时持续时间
+duration = 15 # 倒计时持续时间
 stop_time = 0.0166 # 刷新到下一屏的间隔时间
-xiaxian = 325 # 最最下方的y坐标
+xiaxian = 0.5 * ((chengxianhangshu)*height)# 最最下方的y坐标
 is_add = False
-height = 50
-facted_secong = [0,1,2,3,4,5,6,7,8,9,10]
+facted_secong = [] # 秒数取整用于比较
+for i in range(duration+1):
+    facted_secong.append(i)
+thisResp = None
 # facted_secong = -1
 for i in range(3000):
     drawimage('zhizheng.png')
@@ -57,7 +62,6 @@ for i in range(3000):
         drawText(text,[0,locationx -xiaxian])
         win.flip()
         # win.flip()
-        thisResp = None
         while thisResp is None:
             allKeys = event.waitKeys()
             for thisKey in allKeys:
@@ -68,62 +72,71 @@ for i in range(3000):
                     break  # abort experiment
             if thisResp == True:    # time.sleep(5)
                 break
-        if thisResp == True:    # time.sleep(5)
-                break
-    if len(text_list) < chengxianhangshu: # 有21行
-        if locationx == 0 or is_add == True:
-            # locationx += 5
+        # if thisResp == True:    # time.sleep(5)
+        #     break
+    if thisResp == True:    # time.sleep(5)
+            break
+    # elif len(text_list) > chengxianhangshu:
+    #     # if locationx %(height/2) != 0 or is_add == True:
+    #     if locationx %(height/2) != 0:
+    #         locationx += move_juli
+    #         #shishi
+    #         drawText(text,[0,locationx -xiaxian])
+    #         print(text,locationx)
+    #         win.flip()
+    #         time.sleep(stop_time)
+    #         is_add = False
+    #
+    #     elif locationx %(height/2) == 0 :
+    #         if is_add == False:
+    #             text_list.pop(0)
+    #             selected_num = random.choice(list(num_list))
+    #             text_list.append(str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n')
+    #             text = ''
+    #             for i in text_list:
+    #                 text += i
+    #             #shishi
+    #             locationx = 0.5* height*len(text_list)
+    #             drawText(text,[0,locationx -xiaxian])
+    #             print(text,locationx)
+    #             win.flip()
+    #             time.sleep(stop_time)
+    #             is_add = True
+    #         elif is_add == True:
+    #             locationx += move_juli
+    #             #shishi
+    #             drawText(text,[0,locationx -xiaxian])
+    #             print(text,locationx)
+    #             win.flip()
+    #             time.sleep(stop_time)
+    #             is_add = False
+
+    # elif len(text_list) == chengxianhangshu:
+    if locationx %(height/2) != 0 :
+        # if is_add == True:
+        locationx += move_juli
+        #shishi
+        drawText(text,[0,locationx -xiaxian])
+        print(text,locationx)
+        win.flip()
+        time.sleep(stop_time)
+        is_add = False
+    elif locationx %(height/2) == 0 or locationx == 0:
+        if is_add == False:
+            text_list.pop(0)
             selected_num = random.choice(list(num_list))
-            xintext = str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n'
-            text_list.append(xintext)
-            # text += str(selected_num)  + '\n'
-            text += str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n'
+            text_list.append(str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n')
+            text = ''
+            for i in text_list:
+                text += i
             #shishi
+            locationx = 0.5*  height*len(text_list)
             drawText(text,[0,locationx -xiaxian])
             print(text,locationx)
             win.flip()
             time.sleep(stop_time)
-            locationx += move_juli
-            is_add = False
-
-        elif locationx %(height/2) != 0 or is_add == True:
-            #shishi
-            drawText(text,[0,locationx -xiaxian])
-            print(text,locationx)
-            win.flip()
-            time.sleep(stop_time)
-            locationx += move_juli
-            is_add = False
-        elif locationx %(height/2) == 0 and locationx != 0 :
-            if is_add == False:
-                # locationx += 5
-
-                # locationx= locationx
-                # locationx= -0.5*height*(len(text_list))
-                # locationx = 0
-                selected_num = random.choice(list(num_list))
-                xintext = str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n'
-                text_list.append(xintext)
-                # text += str(selected_num)  + '\n'
-                text += xintext
-                #shishi
-                locationx=  0.5* height*len(text_list)
-                drawText(text,[0,locationx -xiaxian])
-                print(text,locationx)
-                win.flip()
-                time.sleep(stop_time)
-                is_add = True
-            if is_add == True:
-                locationx += move_juli
-                #shishi
-                drawText(text,[0,locationx -xiaxian])
-                print(text,locationx)
-                win.flip()
-                time.sleep(stop_time)
-                is_add = False
-    elif len(text_list) > chengxianhangshu:
-        # if locationx %(height/2) != 0 or is_add == True:
-        if locationx %(height/2) != 0:
+            is_add = True
+        elif is_add == True:
             locationx += move_juli
             #shishi
             drawText(text,[0,locationx -xiaxian])
@@ -131,65 +144,7 @@ for i in range(3000):
             win.flip()
             time.sleep(stop_time)
             is_add = False
-
-        elif locationx %(height/2) == 0 :
-            if is_add == False:
-                text_list.pop(0)
-                selected_num = random.choice(list(num_list))
-                text_list.append(str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n')
-                text = ''
-                for i in text_list:
-                    text += i
-                #shishi
-                locationx = 0.5* height*len(text_list)
-                drawText(text,[0,locationx -xiaxian])
-                print(text,locationx)
-                win.flip()
-                time.sleep(stop_time)
-                is_add = True
-            elif is_add == True:
-                locationx += move_juli
-                #shishi
-                drawText(text,[0,locationx -xiaxian])
-                print(text,locationx)
-                win.flip()
-                time.sleep(stop_time)
-                is_add = False
-
-    elif len(text_list) == chengxianhangshu:
-        if locationx %(height/2) != 0 :
-            # if is_add == True:
-            locationx += move_juli
-            #shishi
-            drawText(text,[0,locationx -xiaxian])
-            print(text,locationx)
-            win.flip()
-            time.sleep(stop_time)
-            is_add = False
-        elif locationx %(height/2) == 0 or locationx == 0:
-            if is_add == False:
-                text_list.pop(0)
-                selected_num = random.choice(list(num_list))
-                text_list.append(str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n')
-                text = ''
-                for i in text_list:
-                    text += i
-                #shishi
-                locationx = 0.5*  height*len(text_list)
-                drawText(text,[0,locationx -xiaxian])
-                print(text,locationx)
-                win.flip()
-                time.sleep(stop_time)
-                is_add = True
-            elif is_add == True:
-                locationx += move_juli
-                #shishi
-                drawText(text,[0,locationx -xiaxian])
-                print(text,locationx)
-                win.flip()
-                time.sleep(stop_time)
-                is_add = False
-
+                 
     # else:
     print(locationx,is_add)
         # locationx += move_juli

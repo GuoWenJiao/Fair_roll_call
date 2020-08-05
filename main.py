@@ -47,13 +47,10 @@ for j in num_list_file:
     num_list.append(j)
 print(len(num_list))
 # 中文字体 窗口
-text_font = 'SimSun'
-winsize = [1920,1080]
+text_font = 'SimSun'  # 字体
+winsize = [1920,1080] # 窗口大小
 win = visual.Window(winsize,fullscr=True,color='#D0D0D0',units='pix')
-
-text = '1'
 text_list = []
-# text_list = ['\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n','\n']
 locationx = 0
 t1 = time.clock()
 chengxianhangshu = 11 # 屏幕呈现多少行字
@@ -78,15 +75,13 @@ for i in range(3000):
     print(t2- t1)
     time_gap = t2- t1
     if int(time_gap) in facted_secong:
-        # facted_secong += 1
         drawText(str(int(time_gap)),[250,0],'red',100)
     if time_gap > duration :
-        print('计时结束啦')
-        # drawText('计时结束啦!',[0,-384],[1, 0, 0])
-        drawText(str(int(time_gap)),[250,0],'red',100)
+        drawText(str(int(time_gap)),[250,0],'red',100) #为了补上暂停时的一秒的画面
         drawText(text,[0,locationx -xiaxian])
         win.flip()
         # win.flip()
+        # 计时结束按空格退出
         while thisResp is None:
             allKeys = event.waitKeys()
             for thisKey in allKeys:
@@ -94,15 +89,12 @@ for i in range(3000):
                     thisResp = True
                 elif thisKey in ['space', 'escape']:
                     thisResp = True
-                    break  # abort experiment
-            if thisResp == True:    # time.sleep(5)
+                    break
+            if thisResp == True:
                 break
-        # if thisResp == True:    # time.sleep(5)
-        #     break
-    if thisResp == True:    # time.sleep(5)
+    if thisResp == True:
             break
     if locationx %(height/2) != 0 :
-        # if is_add == True:
         locationx += move_juli
         #shishi
         drawText(text,[0,locationx -xiaxian])
@@ -133,15 +125,4 @@ for i in range(3000):
             win.flip()
             time.sleep(stop_time)
             is_add = False
-                 
-    # else:
     print(locationx,is_add)
-        # locationx += move_juli
-        # drawText(text,[0,locationx -364])
-        # print(text,locationx)
-        # win.flip()
-        # time.sleep(0.1)
-        # is_add = False
-
-        # break
-

@@ -27,55 +27,77 @@ def Get_Class(class_list):
     choiced_class['Class'] = thisInfo[0]
     return choiced_class
 
-
-def drawimage(image1,location = [-290,0]):
-    pic = visual.ImageStim(win, image= image1, pos=location)
+# opacity 调整透明度
+def drawimage(image1,size,location = [-290,0],opacity =1):
+    pic = visual.ImageStim(win, image= image1, pos=location,size = (size[0], size[1]),opacity = opacity)
     pic.draw(win)
-def drawText(text,location=[0,0],color=[-1, -1, -1],height= 50):
+# def drawimage(image1,location = [-290,0],):
+#     pic = visual.ImageStim(win, image= image1, pos=location)
+#     pic.draw(win)
+def drawText(text,location=[0,0],color=[-1, -1, -1],height= 70):
     text = visual.TextStim(win, text=text, pos=location,color=color,height=height,font=text_font)
     text.draw(win)
 # 选择、读取文件
 path = os.path.abspath('.')
 class_list = file_name(path)
-choiced_class = Get_Class(class_list)
-df = pd.read_csv(path+'/num_file/'+ choiced_class['Class'] + '.csv', encoding='utf-8-sig')
-
+# 如果只有一个文件，直接读该文件，如果有多个文件，可以选择文件
+if len(class_list) == 1:
+    df = pd.read_csv(path+'/num_file/'+ class_list[0] + '.csv', encoding='utf-8-sig')
+elif len(class_list) > 1:
+    choiced_class = Get_Class(class_list)
+    df = pd.read_csv(path+'/num_file/'+ choiced_class['Class'] + '.csv', encoding='utf-8-sig')
+elif len(class_list) == 0:
+    print('请在‘num_file中添加文件’')
 num_list = []
 num_list_file = df['学号']
 for j in num_list_file:
     num_list.append(j)
+
 # 中文字体 窗口
 text_font = 'SimSun'  # 字体
 winsize = [1920,1080] # 窗口大小
 win = visual.Window(winsize,fullscr=True,color='#D0D0D0',units='pix')
 text_list = []
-locationx = 0
-t1 = time.clock()
-chengxianhangshu = 11 # 屏幕呈现多少行字
-height = 50 # 字有多大
-# 先填充n行空白文字
-for i in range(chengxianhangshu):
-    text_list.append('\n')
+# 调试时的一些参数
+duration = 10 # 倒计时持续时间
+chengxianhangshu = 10 # 屏幕呈现多少行字
+height = 70 # 字有多大
 move_juli = 5 #每次移动的距离
-duration = 15 # 倒计时持续时间
-stop_time = 0.0166 # 刷新到下一屏的间隔时间
-xiaxian = 0.5 * ((chengxianhangshu)*height)# 最最下方的y坐标
-is_add = False
+count_down_location = [-500,0] # 倒计时的位置
+text_x = 200  # text的横坐标
+stop_time = 0.0016 # 刷新到下一屏的间隔时间
+# 循环前的一些参数和列表的填充
+time_gap = 0
+locationy = 0  # 最初的文字的从坐标
+xiaxian = 0.5 * ((chengxianhangshu)*height)# 最最下方文字的y坐标
+is_add = False # 该循环是否添加新的一行
 facted_secong = [] # 秒数取整用于比较
 for i in range(duration+1):
     facted_secong.append(i)
 thisResp = None
-# facted_secong = -1
+# 先填充n行空白文字
+for i in range(chengxianhangshu):
+    text_list.append('\n')
+# facted_secong = -1x
+t1 = time.clock()
 for i in range(3000):
-    drawimage('zhizheng.png')
+    drawimage('zhini.png',[857,1078],[0,0],opacity = 0.6)
+    drawimage('kuang.png',[800,height + 20],[text_x,0])
+    # drawimage('fangkuang.png',[text_x,0])
     # win.flip()
     t2 = time.clock()
-    time_gap = t2- t1
+    time_gap = t2 - t1
+    # time_gap += stop_time
     if int(time_gap) in facted_secong:
-        drawText(str(facted_secong[-(int(time_gap)+1)]),[300,0],'red',100)
-    if time_gap > duration :
-        drawText(str(facted_secong[-(int(time_gap)+1)]),[300,0],'red',100) #为了补上暂停时的一秒的画面
-        drawText(text,[0,locationx -xiaxian])
+        drawText(str(facted_secong[-( int(time_gap)+1)]),[count_down_location[0],count_down_location[1]],'red',500)
+    if int(time_gap) > duration :
+        drawText('0',[count_down_location[0],count_down_location[1]],'red',500) #为了补上暂停时的一秒的画面)
+        # drawText(str(facted_secong[-( int(time_gap)+1)]),[count_down_location[0],count_down_location[1]],'red',400) #为了补上暂停时的一秒的画面
+        y = locationy
+        # 强行位移到框里来
+        if y != 0.5*  height*len(text_list):
+            y = 0.5*  height*len(text_list)
+        drawText(text,[text_x,y-xiaxian])
         win.flip()
         # win.flip()
         # 计时结束按空格退出
@@ -91,14 +113,14 @@ for i in range(3000):
                 break
     if thisResp == True:
             break
-    if locationx %(height/2) != 0 :
-        locationx += move_juli
+    if locationy %(height/2) != 0 :
+        locationy += move_juli
         #shishi
-        drawText(text,[0,locationx -xiaxian])
+        drawText(text,[text_x,locationy -xiaxian])
         win.flip()
         time.sleep(stop_time)
         is_add = False
-    elif locationx %(height/2) == 0 or locationx == 0:
+    elif locationy %(height/2) == 0 or locationy == 0:
         if is_add == False:
             text_list.pop(0)
             selected_num = random.choice(list(num_list))
@@ -107,15 +129,15 @@ for i in range(3000):
             for i in text_list:
                 text += i
             #shishi
-            locationx = 0.5*  height*len(text_list)
-            drawText(text,[0,locationx -xiaxian])
+            locationy = 0.5*  height*len(text_list)
+            drawText(text,[text_x,locationy -xiaxian])
             win.flip()
             time.sleep(stop_time)
             is_add = True
         elif is_add == True:
-            locationx += move_juli
+            locationy += move_juli
             #shishi
-            drawText(text,[0,locationx -xiaxian])
+            drawText(text,[text_x,locationy -xiaxian])
             win.flip()
             time.sleep(stop_time)
             is_add = False

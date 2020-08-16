@@ -27,14 +27,11 @@ def Get_Class(class_list):
     choiced_class['Class'] = thisInfo[0]
     return choiced_class
 
-# opacity 调整透明度
+# opacity 调整透明度 1 不透明 0透明 浮点数
 def drawimage(image1,size,location = [-290,0],opacity =1):
     pic = visual.ImageStim(win, image= image1, pos=location,size = (size[0], size[1]),opacity = opacity)
     pic.draw(win)
-# def drawimage(image1,location = [-290,0],):
-#     pic = visual.ImageStim(win, image= image1, pos=location)
-#     pic.draw(win)
-def drawText(text,location=[0,0],color=[-1, -1, -1],height= 100):
+def drawText(text,location=[0,0],color=[-1, -1, -1],height= 150):
     text = visual.TextStim(win, text=text, pos=location,color=color,height=height,font=text_font)
     text.draw(win)
 # 选择、读取文件
@@ -61,15 +58,16 @@ text_list = []
 # 调试时的一些参数
 duration = 10 # 倒计时持续时间
 chengxianhangshu = 1 # 屏幕呈现多少行字
-height = 100 # 字有多大
+height = 150 # 字有多大
 move_juli = 5 #每次移动的距离
-count_down_location = [-500,100] # 倒计时的位置
-text_x = 200  # text的横坐标
+count_down_location = [-650,300] # 倒计时的位置
+text_x = -370  # text的横坐标
 stop_time = 0.0016 # 刷新到下一屏的间隔时间
 # 循环前的一些参数和列表的填充
 time_gap = 0
-locationy = 0  # 最初的文字的从坐标
-xiaxian = 0.5 * ((chengxianhangshu)*height)# 最最下方文字的y坐标
+locationy = 0  # 最初的文字的纵坐标
+# xiaxian = 0.5 * ((chengxianhangshu)*height)# 最最下方文字的y坐标
+xiaxian = 300
 is_add = False # 该循环是否添加新的一行
 facted_secong = [] # 秒数取整用于比较
 for i in range(duration+1):
@@ -78,23 +76,16 @@ thisResp = None
 # 先填充n行空白文字
 for i in range(chengxianhangshu):
     text_list.append('\n')
-# facted_secong = -1x
 t1 = time.clock()
 for i in range(3000):
     drawimage('zhini.png',[857,1078],[0,0],opacity = 0.6)
-    drawimage('kuang.png',[900,height + 20],[text_x +150,0.5*height])
-    # drawimage('fangkuang.png',[text_x,0])
-    # win.flip()
+    drawimage('kuang.png',[1400,height + 20],[0,-0.5*xiaxian],opacity = 0.6)
     t2 = time.clock()
     time_gap = t2 - t1
     if int(time_gap) in facted_secong:
-        drawText(str(facted_secong[-( int(time_gap)+1)]),[count_down_location[0],count_down_location[1]],'red',500)
+        drawText(str(facted_secong[-( int(time_gap)+1)]),[count_down_location[0],count_down_location[1]],'red',400)
     if str(facted_secong[-( int(time_gap)+1)])== '0':
-        drawText('0',[count_down_location[0],count_down_location[1]],'red',500) #为了补上暂停时的一秒的画面)
-        # y = locationy
-        # 强行位移到框里来
-        # if y != 0.5*  height*len(text_list):
-        #     y = 0.5*  height*len(text_list)
+        drawText('0',[count_down_location[0],count_down_location[1]],'red',400) #为了补上暂停时的一秒的画面)
         drawText(text,[text_x,locationy-xiaxian])
         win.flip()
         # win.flip()

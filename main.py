@@ -34,7 +34,7 @@ def drawimage(image1,size,location = [-290,0],opacity =1):
 # def drawimage(image1,location = [-290,0],):
 #     pic = visual.ImageStim(win, image= image1, pos=location)
 #     pic.draw(win)
-def drawText(text,location=[0,0],color=[-1, -1, -1],height= 70):
+def drawText(text,location=[0,0],color=[-1, -1, -1],height= 100):
     text = visual.TextStim(win, text=text, pos=location,color=color,height=height,font=text_font)
     text.draw(win)
 # 选择、读取文件
@@ -60,10 +60,10 @@ win = visual.Window(winsize,fullscr=True,color='#D0D0D0',units='pix')
 text_list = []
 # 调试时的一些参数
 duration = 10 # 倒计时持续时间
-chengxianhangshu = 10 # 屏幕呈现多少行字
-height = 70 # 字有多大
+chengxianhangshu = 1 # 屏幕呈现多少行字
+height = 100 # 字有多大
 move_juli = 5 #每次移动的距离
-count_down_location = [-500,0] # 倒计时的位置
+count_down_location = [-500,100] # 倒计时的位置
 text_x = 200  # text的横坐标
 stop_time = 0.0016 # 刷新到下一屏的间隔时间
 # 循环前的一些参数和列表的填充
@@ -82,22 +82,20 @@ for i in range(chengxianhangshu):
 t1 = time.clock()
 for i in range(3000):
     drawimage('zhini.png',[857,1078],[0,0],opacity = 0.6)
-    drawimage('kuang.png',[800,height + 20],[text_x,0])
+    drawimage('kuang.png',[900,height + 20],[text_x +150,0.5*height])
     # drawimage('fangkuang.png',[text_x,0])
     # win.flip()
     t2 = time.clock()
     time_gap = t2 - t1
-    # time_gap += stop_time
     if int(time_gap) in facted_secong:
         drawText(str(facted_secong[-( int(time_gap)+1)]),[count_down_location[0],count_down_location[1]],'red',500)
-    if int(time_gap) > duration :
+    if str(facted_secong[-( int(time_gap)+1)])== '0':
         drawText('0',[count_down_location[0],count_down_location[1]],'red',500) #为了补上暂停时的一秒的画面)
-        # drawText(str(facted_secong[-( int(time_gap)+1)]),[count_down_location[0],count_down_location[1]],'red',400) #为了补上暂停时的一秒的画面
-        y = locationy
+        # y = locationy
         # 强行位移到框里来
-        if y != 0.5*  height*len(text_list):
-            y = 0.5*  height*len(text_list)
-        drawText(text,[text_x,y-xiaxian])
+        # if y != 0.5*  height*len(text_list):
+        #     y = 0.5*  height*len(text_list)
+        drawText(text,[text_x,locationy-xiaxian])
         win.flip()
         # win.flip()
         # 计时结束按空格退出
@@ -113,31 +111,14 @@ for i in range(3000):
                 break
     if thisResp == True:
             break
-    if locationy %(height/2) != 0 :
-        locationy += move_juli
-        #shishi
-        drawText(text,[text_x,locationy -xiaxian])
-        win.flip()
-        time.sleep(stop_time)
-        is_add = False
-    elif locationy %(height/2) == 0 or locationy == 0:
-        if is_add == False:
-            text_list.pop(0)
-            selected_num = random.choice(list(num_list))
-            text_list.append(str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n')
-            text = ''
-            for i in text_list:
-                text += i
-            #shishi
-            locationy = 0.5*  height*len(text_list)
-            drawText(text,[text_x,locationy -xiaxian])
-            win.flip()
-            time.sleep(stop_time)
-            is_add = True
-        elif is_add == True:
-            locationy += move_juli
-            #shishi
-            drawText(text,[text_x,locationy -xiaxian])
-            win.flip()
-            time.sleep(stop_time)
-            is_add = False
+    text_list.pop(0)
+    selected_num = random.choice(list(num_list))
+    text_list.append(str(selected_num) + ':' + df['姓名'][num_list.index(selected_num)] + '\n')
+    text = ''
+    for i in text_list:
+        text += i
+    #shishi
+    locationy = 0.5*  height*len(text_list)
+    drawText(text,[text_x,locationy -xiaxian])
+    win.flip()
+    time.sleep(stop_time)

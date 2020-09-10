@@ -79,10 +79,11 @@ thisResp = None
 for i in range(chengxianhangshu):
     text_list.append('\n')
 t1 = time.clock()
-for i in range(3000):
-    drawimage('zhini.png',[857*0.5,1078*0.5],[-500,-150],opacity = 1)
-    drawimage('zhini.png',[857*0.5,1078*0.5],[500,-150],opacity = 1)
-    drawimage('kuang.png',[1400,height + 20],[0,height-xiaxian],opacity = 0.6)
+image = random.randint(1,9)
+while True:
+    drawimage('image/' + str(image) + '.png',[1920,1080],[0,0],opacity = 0.7)
+    # drawimage('image/3.png',[1920*0.3,1080*0.3],[500,-150],opacity = 1)
+    drawimage('image/kuang.png',[1400,height + 20],[0,height-xiaxian],opacity = 0.6)
     t2 = time.clock()
     time_gap = t2 - t1
     if int(time_gap) in facted_secong:
